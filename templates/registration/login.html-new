@@ -1,0 +1,34 @@
+{% load url from future %}
+
+{% block header %}
+<link rel='stylesheet' id='wp-admin-css'  href='http://demo.opensourcecms.com/wordpress/wp-admin/css/wp-admin.css?ver=3.4.1' type='text/css' media='all' />
+<link rel='stylesheet' id='colors-fresh-css'  href='http://demo.opensourcecms.com/wordpress/wp-admin/css/colors-fresh.css?ver=3.4.1' type='text/css' media='all' />
+<meta name='robots' content='noindex,nofollow' />
+{% endblock %}
+
+{% block content %}
+<body class="login">
+  <div id="login">
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+    <form name="loginform" id="loginform" method="post" action="{% url 'django.contrib.auth.views.login' %}">
+{% csrf_token %}
+      <p>
+        {{ form.username.label_tag }}
+        {{ form.username }}
+      </p>
+      <p>
+        {{ form.password.label_tag }}
+        {{ form.password }}
+      </p>
+      <p class="submit">
+        <input type="submit" value="login" />
+        <input type="hidden" name="next" value="{{ next }}" />
+      </p>
+    </form>
+  </div>
+</body>
+{% endblock %}
+

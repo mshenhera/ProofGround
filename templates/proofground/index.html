@@ -1,0 +1,103 @@
+
+{% extends "proofground/base.html" %}
+
+{% block content %}
+
+<div id="welcome">
+    Welcome, {{ username }}.
+    <a href="/proofground/logout">Log out</a>
+</div>
+
+<a href="/proofground/refresh"><img src="/static/img/refresh.png"></a>
+
+<h4>Your DevOps proof ground environemnts:</h4>
+
+<table id="vserver">
+    <thead>
+        <tr>
+            <th width=3%>Index</th>
+            <th width=7%>Name</th>
+            <th width=7%>State</th>
+            <th width=10%>User/Password</th>
+            <th width=27%>URL</th>
+            <th width=7%>Owner</th>
+            <th width=7%>OS</th>
+            <th width=7%>Spell</th>
+            <th width=11%>Launch Time</th>
+            <th width=11%>Expiration Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for env in environment_list  %}
+            {% if forloop.counter|divisibleby:"2" %}
+                <tr class="tableRowEven">
+            {% else %}
+                <tr>
+            {% endif %}
+            <td>{{ forloop.counter }}</td>
+            <td>{{ env.get_name }}</td>
+            <td>{{ env.get_status }}</td>
+            <td>{{ env.get_user }}/{{ env.get_password }}</td>
+            <td>{{ env.get_public_url }} </td>
+            <td>{{ env.owner }}</td>
+            <td>{{ env.get_os }}</td>
+            <td>{{ env.get_spell }}</td>
+            <td>{{ env.launch_time|date:'Y-m-d H:i' }}</td>
+            <td>{{ env.expiration_time|date:'Y-m-d H:i' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<form id="createForm" class="inputForm" action="." method="POST">{% csrf_token %}
+  <fieldset>
+    <legend>Launch a new DevOps proof ground environemnt:</legend>
+    {% if error_message %}
+        <font color="red">{{ error_message }}</font>
+    {% endif %}
+    <ul>
+      <li>
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name" value="" />
+      </li>
+      <li>
+        <label for="os">OS:</label>
+        <select name="os">
+          <option value="AWS Linux">AWS Linux</option>
+          <option value="Ubuntu">Ubuntu</option>
+        </select>
+      </li>
+      <li>
+        <label for="lifetime">Terminate after:</label>
+        <select name="lifetime">
+          {% for iter in "123456" %}
+            <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+          {% endfor %}
+        </select>
+        <label for="lifetime">hours</label>
+      </li>
+      <li>
+        <label for="ssh_user">SSH User:</label>
+        <input type="text" name="ssh_user" id="ssh_user" value="" />
+      </li>
+      <li>
+        <label for="ssh_password">SSH Password:</label>
+        <input type="text" name="ssh_password" id="ssh_password" value="" />
+      </li>
+      <li>
+        <label for="spell">Spell:</label>
+        <select name="spell">
+          <option value="">---</option>
+          <option value="install wordpress">Install Wordpress</option>
+          <option value="hack wordpress">Hack Wordpress</option>
+        </select>
+      </li>
+      <li>
+        <input type="submit" value="Go" />
+      </li>
+    </ul>
+  </fieldset>
+</form>
+
+{% endblock content %}

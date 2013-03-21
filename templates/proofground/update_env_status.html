@@ -1,0 +1,13 @@
+
+{% extends "proofground/base.html" %}
+{% block content %}
+
+<ul>
+{% for env in global_env_list  %}
+<li>
+{{ env }}
+</li>
+{% endfor %}
+</ul>
+{% endblock content %}
+
